@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import * as safeStorage from "@/lib/safe-storage"
+import Image from "next/image"
 
 const IconWater = ({ className = "w-6 h-6" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -99,7 +100,12 @@ const IconHistory = ({ className = "w-5 h-5" }) => (
 const IconUser = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    <path
+      d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2M1 12h3m16 0h3M4.22 4.22l2.12 2.12m11.32 11.32l2.12 2.12"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
   </svg>
 )
 
@@ -221,10 +227,10 @@ export default function VerticaliaDashboard() {
   }, [huertas])
 
   const metrics = [
-    { id: "water", label: "Nivel de agua", percent: 65, color: "#27C6F6", valueLabel: "65%", Icon: IconWater },
-    { id: "humidity", label: "Humedad", percent: 48, color: "#10B981", valueLabel: "48%", Icon: IconLeaf },
-    { id: "temp", label: "Temperatura", percent: 55, color: "#FB923C", valueLabel: "22°C", Icon: IconThermometer },
-    { id: "light", label: "Nivel de luz", percent: 80, color: "#FACC15", valueLabel: "80%", Icon: IconSun },
+    { id: "water", label: "Nivel de agua", percent: 65, color: "#a8dadc", valueLabel: "65%", Icon: IconWater },
+    { id: "humidity", label: "Humedad", percent: 48, color: "#81b29a", valueLabel: "48%", Icon: IconLeaf },
+    { id: "temp", label: "Temperatura", percent: 55, color: "#e07a5f", valueLabel: "22°C", Icon: IconThermometer },
+    { id: "light", label: "Nivel de luz", percent: 80, color: "#f2cc8f", valueLabel: "80%", Icon: IconSun },
   ]
 
   const menuItems = [
@@ -384,8 +390,15 @@ export default function VerticaliaDashboard() {
 
         {/* Header con campanita */}
         <div className="flex flex-col gap-2 relative">
-          <div className="text-center text-xl font-extrabold tracking-widest text-emerald-700 font-['Poppins',sans-serif]">
-            VERTICALIA
+          <div className="text-center flex justify-center">
+            <Image
+              src="/images/logo.png"
+              alt="Verticalia Logo"
+              width={300}
+              height={75}
+              className="h-24 w-auto"
+              priority
+            />
           </div>
 
           <div className="flex items-center justify-between">

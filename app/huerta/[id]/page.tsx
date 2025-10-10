@@ -178,10 +178,10 @@ const gardenData = {
     plantedDate: "20 Ene 2025",
     harvestDate: "20 Abr 2025",
     nextWater: "3 días",
-    waterLevel: 72,
-    humidity: 52,
-    temperature: 21,
-    light: 75,
+    waterLevel: 65,
+    humidity: 48,
+    temperature: 22,
+    light: 80,
     status: "Saludable",
     notes: "Desarrollo normal. Revisar plagas semanalmente.",
     waterHistory: [
@@ -196,11 +196,11 @@ const gardenData = {
     plantedDate: "1 Feb 2025",
     harvestDate: "15 Mar 2025",
     nextWater: "1 día",
-    waterLevel: 45,
-    humidity: 60,
-    temperature: 18,
-    light: 85,
-    status: "Requiere atención",
+    waterLevel: 65,
+    humidity: 48,
+    temperature: 22,
+    light: 80,
+    status: "Saludable",
     notes: "Nivel de agua bajo. Regar pronto.",
     waterHistory: [
       { date: "11 Feb", amount: "1.8L" },
@@ -214,10 +214,10 @@ const gardenData = {
     plantedDate: "10 Ene 2025",
     harvestDate: "10 Abr 2025",
     nextWater: "4 días",
-    waterLevel: 80,
-    humidity: 55,
-    temperature: 20,
-    light: 78,
+    waterLevel: 65,
+    humidity: 48,
+    temperature: 22,
+    light: 80,
     status: "Excelente",
     notes: "Condiciones ideales. Continuar monitoreo.",
     waterHistory: [
@@ -232,10 +232,10 @@ const gardenData = {
     plantedDate: "25 Ene 2025",
     harvestDate: "25 Abr 2025",
     nextWater: "2 días",
-    waterLevel: 68,
-    humidity: 50,
-    temperature: 23,
-    light: 82,
+    waterLevel: 65,
+    humidity: 48,
+    temperature: 22,
+    light: 80,
     status: "Saludable",
     notes: "Crecimiento constante. Mantener condiciones actuales.",
     waterHistory: [
@@ -344,10 +344,10 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               plantedDate: foundGarden.plantingDate || "Reciente",
               harvestDate: "Por determinar",
               nextWater: foundGarden.nextWater || "3 días",
-              waterLevel: 70,
-              humidity: 50,
+              waterLevel: 65,
+              humidity: 48,
               temperature: 22,
-              light: 75,
+              light: 80,
               status: "Saludable",
               notes: foundGarden.notes || "Huerta recién creada. Monitorear desarrollo.",
               waterHistory: [{ date: "Hoy", amount: "2.0L" }],
@@ -484,7 +484,7 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               percent={garden.waterLevel}
               size={90}
               stroke={8}
-              color="#27C6F6"
+              color="#a8dadc"
               label="Nivel de agua"
               valueLabel={`${garden.waterLevel}%`}
               Icon={IconWater}
@@ -493,7 +493,7 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               percent={garden.humidity}
               size={90}
               stroke={8}
-              color="#10B981"
+              color="#81b29a"
               label="Humedad"
               valueLabel={`${garden.humidity}%`}
               Icon={IconLeaf}
@@ -502,7 +502,7 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               percent={(garden.temperature / 40) * 100}
               size={90}
               stroke={8}
-              color="#FB923C"
+              color="#e07a5f"
               label="Temperatura"
               valueLabel={`${garden.temperature}°C`}
               Icon={IconThermometer}
@@ -511,7 +511,7 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               percent={garden.light}
               size={90}
               stroke={8}
-              color="#FACC15"
+              color="#f2cc8f"
               label="Nivel de luz"
               valueLabel={`${garden.light}%`}
               Icon={IconSun}
