@@ -1,7 +1,8 @@
 "use client"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 
@@ -320,8 +321,68 @@ const careGuides: Record<
 
 export default function HuertaDetailPage({ params }: { params: { id: string } }) {
   const { id } = params
-  const garden = gardenData[id as keyof typeof gardenData]
+  const router = useRouter()
+  const [garden, setGarden] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
   const [showCareGuide, setShowCareGuide] = useState(false)
+
+  useEffect(() => {
+    let gardenInfo = gardenData[id as keyof typeof gardenData]
+
+    if (!gardenInfo) {
+      const stored = localStorage.getItem("verticalia-huertas")
+      if (stored) {
+        try {
+          const huertas = JSON.parse(stored)
+          const foundGarden = huertas.find((h: any) => h.id.toString() === id)
+
+          if (foundGarden) {
+            gardenInfo = {
+              name: foundGarden.name,
+              plant: foundGarden.plant,
+              plantedDate: foundGarden.plantingDate || "Reciente",
+              harvestDate: "Por determinar",
+              nextWater: foundGarden.nextWater || "3 días",
+              waterLevel: 70,
+              humidity: 50,
+              temperature: 22,
+              light: 75,
+              status: "Saludable",
+              notes: foundGarden.notes || "Huerta recién creada. Monitorear desarrollo.",
+              waterHistory: [{ date: "Hoy", amount: "2.0L" }],
+            }
+          }
+        } catch (e) {
+          console.error("Error loading garden from localStorage", e)
+        }
+      }
+    }
+
+    setGarden(gardenInfo)
+    setLoading(false)
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-emerald-50 flex items-center justify-center">
+        <div className="text-emerald-700 font-medium">Cargando...</div>
+      </div>
+    )
+  }
+
+  if (!garden) {
+    return (
+      <div className="min-h-screen bg-emerald-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl p-6 shadow-lg max-w-sm text-center">
+          <h2 className="text-lg font-bold text-gray-800 mb-2">Huerta no encontrada</h2>
+          <p className="text-gray-600 mb-4">No se pudo encontrar la información de esta huerta.</p>
+          <Button onClick={() => router.push("/")} className="bg-emerald-600 hover:bg-emerald-700">
+            Volver al inicio
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   const statusColor =
     garden.status === "Excelente"
@@ -334,7 +395,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
 
   return (
     <div className="min-h-screen bg-emerald-50 relative overflow-hidden">
-      {/* Background decoration */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none blur-sm opacity-80"
         xmlns="http://www.w3.org/2000/svg"
@@ -359,7 +419,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
       </svg>
 
       <div className="relative z-10 max-w-md mx-auto p-4">
-        {/* Header */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -378,7 +437,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
           <div className={`px-3 py-1 rounded-full text-xs font-medium ${statusColor}`}>{garden.status}</div>
         </motion.div>
 
-        {/* Main info card */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -413,7 +471,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
           </div>
         </motion.div>
 
-        {/* Metrics */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -461,7 +518,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
           </div>
         </motion.div>
 
-        {/* Water history */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -488,7 +544,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
           </div>
         </motion.div>
 
-        {/* Notes */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -499,7 +554,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
           <p className="text-sm text-gray-700 leading-relaxed">{garden.notes}</p>
         </motion.div>
 
-        {/* Care guide button */}
         <motion.button
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -511,7 +565,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
           Guía de cuidados
         </motion.button>
 
-        {/* Action button */}
         <motion.button
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -523,7 +576,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
         </motion.button>
       </div>
 
-      {/* Care guide dialog */}
       <Dialog open={showCareGuide} onOpenChange={setShowCareGuide}>
         <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto bg-white">
           <DialogHeader>
@@ -534,7 +586,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            {/* Watering */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-emerald-700 font-semibold">
                 <IconWater className="w-5 h-5" />
@@ -543,7 +594,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               <p className="text-sm text-gray-700 leading-relaxed pl-7">{careGuide.watering}</p>
             </div>
 
-            {/* Sunlight */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-amber-600 font-semibold">
                 <IconSun className="w-5 h-5" />
@@ -552,7 +602,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               <p className="text-sm text-gray-700 leading-relaxed pl-7">{careGuide.sunlight}</p>
             </div>
 
-            {/* Temperature */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-orange-600 font-semibold">
                 <IconThermometer className="w-5 h-5" />
@@ -561,7 +610,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               <p className="text-sm text-gray-700 leading-relaxed pl-7">{careGuide.temperature}</p>
             </div>
 
-            {/* Fertilization */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-green-600 font-semibold">
                 <IconLeaf className="w-5 h-5" />
@@ -570,7 +618,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               <p className="text-sm text-gray-700 leading-relaxed pl-7">{careGuide.fertilization}</p>
             </div>
 
-            {/* Common Problems */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-red-600 font-semibold">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -582,7 +629,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
               <p className="text-sm text-gray-700 leading-relaxed pl-7">{careGuide.commonProblems}</p>
             </div>
 
-            {/* Tips */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-blue-600 font-semibold">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
