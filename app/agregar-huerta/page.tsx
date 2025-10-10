@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import * as safeStorage from "@/lib/safe-storage"
 
 const IconArrowLeft = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,11 +65,9 @@ export default function AgregarHuertaPage() {
       return
     }
 
-    // Get existing huertas from localStorage
-    const stored = localStorage.getItem("verticalia-huertas")
+    const stored = safeStorage.getItem("verticalia-huertas")
     const huertas = stored ? JSON.parse(stored) : []
 
-    // Create new huerta
     const newHuerta = {
       id: huertas.length > 0 ? Math.max(...huertas.map((h: any) => h.id)) + 1 : 1,
       name: formData.name,
@@ -79,16 +78,13 @@ export default function AgregarHuertaPage() {
       nextWater: "5 días",
     }
 
-    // Save to localStorage
-    localStorage.setItem("verticalia-huertas", JSON.stringify([...huertas, newHuerta]))
+    safeStorage.setItem("verticalia-huertas", JSON.stringify([...huertas, newHuerta]))
 
-    // Navigate back to dashboard
     router.push("/")
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-emerald-50 relative overflow-hidden">
-      {/* Background decoration */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none blur-sm opacity-80"
         xmlns="http://www.w3.org/2000/svg"
@@ -112,13 +108,11 @@ export default function AgregarHuertaPage() {
         </g>
       </svg>
 
-      {/* Mobile-style container */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-xs bg-white rounded-2xl shadow-xl p-6 relative z-10"
       >
-        {/* Header with back button */}
         <div className="flex items-center gap-3 mb-6">
           <button
             onClick={() => router.push("/")}
@@ -133,18 +127,15 @@ export default function AgregarHuertaPage() {
           </div>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-3 -mx-6 px-6 pb-4 border-b border-emerald-100">
             <Label className="text-sm font-medium text-gray-700">
               Tipo de planta <span className="text-red-500">*</span>
             </Label>
             <div className="relative -mx-6">
-              {/* Gradient overlays for scroll indication */}
               <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
               <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-              {/* Scrollable carousel */}
               <div className="overflow-x-auto scrollbar-hide px-6 pb-2">
                 <div className="flex gap-3 min-w-max">
                   {plantOptions.map((plant) => (
@@ -245,7 +236,6 @@ export default function AgregarHuertaPage() {
             />
           </div>
 
-          {/* Action buttons */}
           <div className="flex flex-col gap-3 pt-4">
             <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white h-11 text-base">
               Crear Huerta

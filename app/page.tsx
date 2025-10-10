@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import * as safeStorage from "@/lib/safe-storage"
 
 const IconWater = ({ className = "w-6 h-6" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -201,21 +202,21 @@ export default function VerticaliaDashboard() {
   ])
 
   useEffect(() => {
-    const stored = localStorage.getItem("verticalia-huertas")
+    const stored = safeStorage.getItem("verticalia-huertas")
     if (stored) {
       try {
         setHuertas(JSON.parse(stored))
       } catch (e) {
-        console.warn("Error parseando huertas desde localStorage", e)
+        console.warn("[v0] Error parsing gardens from storage", e)
       }
     }
   }, [])
 
   useEffect(() => {
     try {
-      localStorage.setItem("verticalia-huertas", JSON.stringify(huertas))
+      safeStorage.setItem("verticalia-huertas", JSON.stringify(huertas))
     } catch (e) {
-      console.warn("Error guardando huertas en localStorage", e)
+      console.warn("[v0] Error saving gardens to storage", e)
     }
   }, [huertas])
 

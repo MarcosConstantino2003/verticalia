@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import * as safeStorage from "@/lib/safe-storage"
 
 const IconWater = ({ className = "w-6 h-6" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -330,7 +331,7 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
     let gardenInfo = gardenData[id as keyof typeof gardenData]
 
     if (!gardenInfo) {
-      const stored = localStorage.getItem("verticalia-huertas")
+      const stored = safeStorage.getItem("verticalia-huertas")
       if (stored) {
         try {
           const huertas = JSON.parse(stored)
@@ -353,7 +354,7 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
             }
           }
         } catch (e) {
-          console.error("Error loading garden from localStorage", e)
+          console.warn("[v0] Error loading garden from storage", e)
         }
       }
     }
@@ -524,32 +525,6 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
           transition={{ delay: 0.3 }}
           className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-lg mb-4"
         >
-          <h2 className="text-sm font-semibold text-emerald-800 mb-3 flex items-center gap-2">
-            <IconDroplet className="w-4 h-4" />
-            Historial de riego
-          </h2>
-          <div className="space-y-2">
-            {garden.waterHistory.map((entry, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-2 bg-emerald-50/50 rounded-lg border border-emerald-100"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-cyan-400 rounded-full" />
-                  <span className="text-sm text-gray-700">{entry.date}</span>
-                </div>
-                <span className="text-sm font-medium text-emerald-700">{entry.amount}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-lg mb-4"
-        >
           <h2 className="text-sm font-semibold text-emerald-800 mb-2">Notas</h2>
           <p className="text-sm text-gray-700 leading-relaxed">{garden.notes}</p>
         </motion.div>
@@ -557,7 +532,7 @@ export default function HuertaDetailPage({ params }: { params: { id: string } })
         <motion.button
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.4 }}
           onClick={() => setShowCareGuide(true)}
           className="w-full bg-white hover:bg-gray-50 text-emerald-700 font-medium py-3 rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 mb-3 border border-emerald-200"
         >
