@@ -214,7 +214,7 @@ export default function VerticaliaDashboard() {
     { id: 4, name: "Huerta D", plant: "Acelga", nextWater: "4 días", status: "good" },
     { id: 5, name: "Huerta E", plant: "Cebolla", nextWater: "2 días", status: "good" },
     { id: 6, name: "Huerta F", plant: "Acelga", nextWater: "4 días", status: "good" },
-    { id: 7, name: "Nueva", plant: "Zanahoria", nextWater: "4 días", status: "good" },
+    { id: 7, name: "Nueva", plant: "Espinaca", nextWater: "4 días", status: "good" },
   ])
 
   const [mounted, setMounted] = useState(false)
