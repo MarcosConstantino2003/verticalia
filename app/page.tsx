@@ -77,7 +77,6 @@ const IconPlus = ({ className = "w-5 h-5" }) => (
     <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
-
 const IconSettings = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5" />
@@ -89,14 +88,12 @@ const IconSettings = ({ className = "w-5 h-5" }) => (
     />
   </svg>
 )
-
 const IconHistory = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
     <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 )
-
 const IconUser = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
@@ -108,7 +105,6 @@ const IconUser = ({ className = "w-5 h-5" }) => (
     />
   </svg>
 )
-
 const IconNotification = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -120,7 +116,6 @@ const IconNotification = ({ className = "w-5 h-5" }) => (
     />
   </svg>
 )
-
 const IconHelp = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
@@ -128,14 +123,12 @@ const IconHelp = ({ className = "w-5 h-5" }) => (
     <circle cx="12" cy="17" r="0.5" fill="currentColor" />
   </svg>
 )
-
 const IconInfo = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
     <path d="M12 16v-4m0-4h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 )
-
 const IconLogout = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -147,7 +140,6 @@ const IconLogout = ({ className = "w-5 h-5" }) => (
     />
   </svg>
 )
-
 const IconClose = ({ className = "w-6 h-6" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -226,6 +218,21 @@ export default function VerticaliaDashboard() {
     }
   }, [huertas])
 
+  // responsive gauge size for mobile webview
+  const [gaugeSize, setGaugeSize] = useState(100)
+  useEffect(() => {
+    function updateSize() {
+      const w = typeof window !== "undefined" ? window.innerWidth : 360
+      if (w <= 360) setGaugeSize(80)
+      else if (w <= 420) setGaugeSize(96)
+      else if (w <= 600) setGaugeSize(110)
+      else setGaugeSize(120)
+    }
+    updateSize()
+    window.addEventListener("resize", updateSize)
+    return () => window.removeEventListener("resize", updateSize)
+  }, [])
+
   const metrics = [
     { id: "water", label: "Nivel de agua", percent: 65, color: "#a8dadc", valueLabel: "65%", Icon: IconWater },
     { id: "humidity", label: "Humedad", percent: 48, color: "#81b29a", valueLabel: "48%", Icon: IconLeaf },
@@ -252,116 +259,85 @@ export default function VerticaliaDashboard() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-emerald-50 relative overflow-hidden backdrop-blur-md">
-      {/* Fondo SVG decorativo con triángulos verdes */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none blur-sm opacity-80"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="none"
-        viewBox="0 0 800 1200"
-        aria-hidden
-      >
-        <defs>
-          <linearGradient id="g1" x1="0" x2="1">
-            <stop offset="0%" stopColor="#ECFDF5" />
-            <stop offset="100%" stopColor="#DBFADF" />
-          </linearGradient>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#g1)" />
-        <g transform="translate(-80, -40)" opacity="0.25">
-          <polygon points="100,50 220,250 -20,250" fill="#10B981" />
-          <polygon points="300,200 420,400 180,400" fill="#34D399" />
-          <polygon points="520,60 680,260 420,260" fill="#059669" />
-          <polygon points="640,420 760,620 520,620" fill="#16A34A" />
-          <polygon points="200,540 340,760 80,760" fill="#86EFAC" />
-        </g>
-      </svg>
-
+    // Contenedor principal: sin fondo difuminado externo, preparado para webview móvil
+    <div className="min-h-screen flex items-center justify-center bg-emerald-50 relative overflow-hidden backdrop-blur-md">
       <AnimatePresence>
         {isPanelOpen && (
           <>
-            {/* Overlay */}
+            {/* Overlay para panel lateral (sin blur para performance en WebView) */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 bg-black/30 z-40"
               onClick={() => setIsPanelOpen(false)}
             />
 
-            {/* Side Panel */}
+            {/* Side Panel: responsive width para mobiles (4/5) y.desktop (w-80) */}
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-0 bottom-0 w-80 bg-white shadow-2xl z-50 overflow-y-auto"
+              className="fixed left-0 top-0 bottom-0 w-4/5 max-w-[320px] sm:w-80 bg-white shadow-2xl z-50 overflow-y-auto"
             >
               {/* Panel Header */}
-              <div className="bg-gradient-to-br from-emerald-600 to-emerald-700 p-6 pb-8">
-                <div className="flex items-start justify-between mb-6">
-                  <div className="text-white font-bold text-xl tracking-wide">VERTICALIA</div>
+              <div className="bg-gradient-to-br from-emerald-600 to-emerald-700 p-5 pb-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="text-white font-bold text-lg tracking-wide">VERTICALIA</div>
                   <button
                     onClick={() => setIsPanelOpen(false)}
-                    className="p-1 hover:bg-white/20 rounded-lg transition-colors"
+                    className="p-2 rounded-lg transition-colors"
                     aria-label="Cerrar menú"
                   >
-                    <IconClose className="w-6 h-6 text-white" />
+                    <IconClose className="w-5 h-5 text-white" />
                   </button>
                 </div>
 
                 {/* User Info */}
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-emerald-700 font-bold text-2xl shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-emerald-700 font-bold text-lg shadow">
                     M
                   </div>
                   <div>
-                    <div className="text-white font-semibold text-lg">Marcos</div>
-                    <div className="text-emerald-100 text-sm">marcos@verticalia.com</div>
+                    <div className="text-white font-semibold text-sm">Marcos</div>
+                    <div className="text-emerald-100 text-xs">marcos@verticalia.com</div>
                   </div>
                 </div>
               </div>
 
               {/* Menu Items */}
-              <div className="p-4">
+              <div className="p-3">
                 <nav className="space-y-1">
                   {menuItems.map((item, index) => (
                     <motion.button
                       key={item.id}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
+                      transition={{ delay: index * 0.04 }}
                       onClick={() => handleMenuItemClick(item)}
-                      className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all hover:bg-emerald-50 group active:scale-[0.98] ${
-                        item.danger ? "hover:bg-red-50" : ""
+                      className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all active:scale-[0.985] ${
+                        item.danger ? "hover:bg-red-50" : "hover:bg-emerald-50"
                       }`}
                     >
                       <div
-                        className={`p-2 rounded-lg transition-colors ${
-                          item.danger
-                            ? "bg-red-50 text-red-600 group-hover:bg-red-100"
-                            : "bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100"
+                        className={`p-2 rounded-md ${
+                          item.danger ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-600"
                         }`}
                       >
                         <item.icon className="w-5 h-5" />
                       </div>
-                      <span
-                        className={`font-medium ${item.danger ? "text-red-600" : "text-gray-700 group-hover:text-emerald-700"}`}
-                      >
+                      <span className={`font-medium ${item.danger ? "text-red-600" : "text-gray-700"}`}>
                         {item.label}
                       </span>
-                      <IconChevronRight
-                        className={`w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity ${
-                          item.danger ? "text-red-400" : "text-emerald-400"
-                        }`}
-                      />
+                      <IconChevronRight className="w-4 h-4 ml-auto opacity-50" />
                     </motion.button>
                   ))}
                 </nav>
 
                 {/* App Version */}
-                <div className="mt-8 pt-6 border-t border-gray-200">
+                <div className="mt-6 pt-4 border-t border-gray-100">
                   <div className="text-center text-xs text-gray-400">
                     Verticalia v1.0.0
                     <br />
@@ -374,29 +350,17 @@ export default function VerticaliaDashboard() {
         )}
       </AnimatePresence>
 
-      <div className="w-full max-w-xs rounded-2xl shadow-xl p-4 relative z-10 overflow-hidden">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <svg
-            className="w-full h-full"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            viewBox="0 0 400 800"
-          >
-            <polygon points="100,50 220,250 -20,250" fill="#10B981" />
-            <polygon points="300,200 420,400 180,400" fill="#34D399" />
-            <polygon points="220,540 340,760 80,760" fill="#86EFAC" />
-          </svg>
-        </div>
-
-        {/* Header con campanita */}
+      {/* Tarjeta principal: adaptativa, sin background decorativo externo */}
+      <div className="w-full max-w-md rounded-2xl shadow-xl p-4 relative z-10 overflow-hidden">
+        {/* Header con logo y perfil */}
         <div className="flex flex-col gap-2 relative">
           <div className="text-center flex justify-center">
             <Image
               src="/images/logo.png"
               alt="Verticalia Logo"
-              width={300}
-              height={75}
-              className="h-24 w-auto"
+              width={260}
+              height={70}
+              className="h-16 w-auto object-contain"
               priority
             />
           </div>
@@ -404,7 +368,8 @@ export default function VerticaliaDashboard() {
           <div className="flex items-center justify-between">
             <button
               onClick={() => setIsPanelOpen(true)}
-              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+              className="flex items-center gap-3 p-2 rounded-lg"
+              aria-label="Abrir menú"
             >
               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-emerald-700 font-bold shadow">
                 M
@@ -412,17 +377,21 @@ export default function VerticaliaDashboard() {
               <div className="text-sm text-emerald-800 font-semibold">Marcos</div>
             </button>
 
-            <button className="p-2 bg-emerald-50 rounded-lg relative" aria-label="Notificaciones">
+            <button
+              className="p-3 bg-emerald-50 rounded-lg"
+              aria-label="Notificaciones"
+              title="Notificaciones"
+            >
               <IconBell className="text-emerald-700" />
             </button>
           </div>
         </div>
 
-        {/* Tarjeta de tiempo restante */}
+        {/* Tarjeta de tiempo restante (touch-friendly) */}
         <motion.div
           initial={{ y: 8, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mt-4 bg-white/70 rounded-xl p-3 shadow-sm border border-emerald-100 backdrop-blur-sm"
+          className="mt-4 bg-white rounded-xl p-3 shadow-sm border border-emerald-100"
         >
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -438,19 +407,19 @@ export default function VerticaliaDashboard() {
           </div>
         </motion.div>
 
-        {/* Métricas */}
+        {/* Métricas: responsive grid (2 cols en móviles) */}
         <div className="mt-4 grid grid-cols-2 gap-3">
           {metrics.map((m) => (
             <motion.div
               key={m.id}
               initial={{ y: 6, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="bg-white/70 rounded-xl p-3 shadow-sm flex items-center justify-center backdrop-blur-sm"
+              className="bg-white rounded-xl p-2 shadow-sm flex items-center justify-center"
             >
               <CircularGauge
                 percent={m.percent}
-                size={104}
-                stroke={10}
+                size={gaugeSize}
+                stroke={Math.max(6, Math.round(gaugeSize * 0.08))}
                 color={m.color}
                 label={m.label}
                 valueLabel={m.valueLabel}
@@ -468,7 +437,7 @@ export default function VerticaliaDashboard() {
               <div className="text-xs text-gray-500">{huertas.length}</div>
               <Link href="/agregar-huerta">
                 <button
-                  className="h-7 w-7 p-0 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-md flex items-center justify-center transition-colors"
+                  className="h-9 w-9 p-0 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-md flex items-center justify-center transition-colors"
                   aria-label="Agregar huerta"
                 >
                   <IconPlus className="w-4 h-4" />
@@ -483,7 +452,7 @@ export default function VerticaliaDashboard() {
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white/70 rounded-lg p-3 shadow-inner border border-emerald-100 flex items-center justify-between backdrop-blur-sm hover:bg-white/90 hover:shadow-md transition-all cursor-pointer"
+                  className="bg-white rounded-lg p-3 border border-emerald-100 flex items-center justify-between hover:bg-gray-50 transition-all cursor-pointer"
                 >
                   <div>
                     <div className="text-sm font-medium text-emerald-700">
