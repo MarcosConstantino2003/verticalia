@@ -250,6 +250,8 @@ export default function VerticaliaDashboard() {
 
   const [gaugeSize, setGaugeSize] = useState(100)
   useEffect(() => {
+    if (!mounted) return
+
     function updateSize() {
       if (typeof window === "undefined") return
       try {
@@ -268,7 +270,7 @@ export default function VerticaliaDashboard() {
       window.addEventListener("resize", updateSize)
       return () => window.removeEventListener("resize", updateSize)
     }
-  }, [])
+  }, [mounted])
 
   const metrics = [
     { id: "water", label: "Nivel de agua", percent: 65, color: "#a8dadc", valueLabel: "65%", Icon: IconWater },
@@ -306,6 +308,14 @@ export default function VerticaliaDashboard() {
     } catch (e) {
       console.warn("[v0] Navigation error", e)
     }
+  }
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex items-center justify-center">
+        <div className="text-emerald-600">Cargando...</div>
+      </div>
+    )
   }
 
   return (

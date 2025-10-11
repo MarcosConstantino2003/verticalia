@@ -2,9 +2,9 @@ import type React from "react"
 import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
-import { Analytics } from "@vercel/analytics/next"
-import { Suspense } from "react"
+import { ConditionalAnalytics } from "@/components/conditional-analytics"
 import "./globals.css"
+import { Suspense } from "react"
 
 export const metadata: Metadata = {
   title: "Verticalia",
@@ -18,10 +18,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <Suspense fallback={<div className="min-h-screen bg-emerald-50" />}>{children}</Suspense>
-        <Analytics />
+    <html lang="en" suppressHydrationWarning>
+      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+        <Suspense fallback={null}>
+          {children}
+          <ConditionalAnalytics />
+        </Suspense>
       </body>
     </html>
   )
