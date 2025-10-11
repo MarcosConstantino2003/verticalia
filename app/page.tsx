@@ -96,12 +96,7 @@ const IconHistory = ({ className = "w-5 h-5" }) => (
 const IconUser = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
-    <path
-      d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
+    <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 )
 const IconNotification = ({ className = "w-5 h-5" }) => (
@@ -178,7 +173,7 @@ function CircularGauge({
             strokeLinecap="round"
             fill="none"
             transform={`rotate(-90 ${size / 2} ${size / 2})`}
-            style={{ transition: 'stroke-dashoffset 0.5s ease' }}
+            style={{ transition: "stroke-dashoffset 0.5s ease" }}
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-sm">
@@ -195,8 +190,20 @@ export default function VerticaliaDashboard() {
   const [isPanelOpen, setIsPanelOpen] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
   const [notifications, setNotifications] = useState([
-    { id: 1, title: "Riego programado", message: "Huerta C necesita riego en 1 día", time: "Hace 2 horas", read: false },
-    { id: 2, title: "Nivel de agua bajo", message: "El tanque principal está al 65%", time: "Hace 5 horas", read: false },
+    {
+      id: 1,
+      title: "Riego programado",
+      message: "Huerta C necesita riego en 1 día",
+      time: "Hace 2 horas",
+      read: false,
+    },
+    {
+      id: 2,
+      title: "Nivel de agua bajo",
+      message: "El tanque principal está al 65%",
+      time: "Hace 5 horas",
+      read: false,
+    },
     { id: 3, title: "Temperatura alta", message: "La temperatura alcanzó 28°C", time: "Ayer", read: true },
   ])
 
@@ -208,44 +215,66 @@ export default function VerticaliaDashboard() {
     { id: 5, name: "Huerta E", plant: "Cebolla", nextWater: "2 días", status: "good" },
   ])
 
+  const [mounted, setMounted] = useState(false)
+
   useEffect(() => {
-    const stored = safeStorage.getItem("verticalia-huertas")
-    if (stored) {
-      try {
-        setHuertas(JSON.parse(stored))
-      } catch (e) {
-        console.warn("[v0] Error parsing gardens from storage", e)
-      }
-    }
+    setMounted(true)
   }, [])
 
   useEffect(() => {
+    if (!mounted) return
+
+    try {
+      const stored = safeStorage.getItem("verticalia-huertas")
+      if (stored) {
+        try {
+          setHuertas(JSON.parse(stored))
+        } catch (e) {
+          console.warn("[v0] Error parsing gardens from storage", e)
+        }
+      }
+    } catch (e) {
+      console.warn("[v0] Error loading gardens", e)
+    }
+  }, [mounted])
+
+  useEffect(() => {
+    if (!mounted) return
+
     try {
       safeStorage.setItem("verticalia-huertas", JSON.stringify(huertas))
     } catch (e) {
       console.warn("[v0] Error saving gardens to storage", e)
     }
-  }, [huertas])
+  }, [huertas, mounted])
 
   const [gaugeSize, setGaugeSize] = useState(100)
   useEffect(() => {
     function updateSize() {
-      const w = typeof window !== "undefined" ? window.innerWidth : 360
-      if (w <= 360) setGaugeSize(80)
-      else if (w <= 420) setGaugeSize(90)
-      else if (w <= 600) setGaugeSize(100)
-      else setGaugeSize(110)
+      if (typeof window === "undefined") return
+      try {
+        const w = window.innerWidth
+        if (w <= 360) setGaugeSize(80)
+        else if (w <= 420) setGaugeSize(90)
+        else if (w <= 600) setGaugeSize(100)
+        else setGaugeSize(110)
+      } catch (e) {
+        console.warn("[v0] Error updating gauge size", e)
+        setGaugeSize(100)
+      }
     }
     updateSize()
-    window.addEventListener("resize", updateSize)
-    return () => window.removeEventListener("resize", updateSize)
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", updateSize)
+      return () => window.removeEventListener("resize", updateSize)
+    }
   }, [])
 
   const metrics = [
-    { id: "water", label: "Nivel de agua", percent: 65, color: "#06b6d4", valueLabel: "65%", Icon: IconWater },
-    { id: "humidity", label: "Humedad", percent: 48, color: "#10b981", valueLabel: "48%", Icon: IconLeaf },
-    { id: "temp", label: "Temperatura", percent: 55, color: "#f59e0b", valueLabel: "22°C", Icon: IconThermometer },
-    { id: "light", label: "Nivel de luz", percent: 80, color: "#eab308", valueLabel: "80%", Icon: IconSun },
+    { id: "water", label: "Nivel de agua", percent: 65, color: "#a8dadc", valueLabel: "65%", Icon: IconWater },
+    { id: "humidity", label: "Humedad", percent: 48, color: "#81b29a", valueLabel: "48%", Icon: IconLeaf },
+    { id: "temp", label: "Temperatura", percent: 55, color: "#e07a5f", valueLabel: "22°C", Icon: IconThermometer },
+    { id: "light", label: "Nivel de luz", percent: 80, color: "#f2cc8f", valueLabel: "80%", Icon: IconSun },
   ]
 
   const menuItems = [
@@ -264,15 +293,19 @@ export default function VerticaliaDashboard() {
   }
 
   const markNotificationAsRead = (id) => {
-    setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n))
+    setNotifications(notifications.map((n) => (n.id === id ? { ...n, read: true } : n)))
   }
 
-  const unreadCount = notifications.filter(n => !n.read).length
+  const unreadCount = notifications.filter((n) => !n.read).length
 
   const navigateToAddGarden = () => {
-    // Simulamos navegación - en tu app real esto sería router.push('/agregar-huerta')
-    console.log('Navegando a agregar huerta...')
-    window.location.href = '/agregar-huerta'
+    try {
+      if (typeof window !== "undefined") {
+        window.location.href = "/agregar-huerta"
+      }
+    } catch (e) {
+      console.warn("[v0] Navigation error", e)
+    }
   }
 
   return (
@@ -334,14 +367,14 @@ export default function VerticaliaDashboard() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
                       onClick={() => handleMenuItemClick(item)}
-                      className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all active:scale-95 ${item.danger
-                          ? "hover:bg-red-50 active:bg-red-100"
-                          : "hover:bg-emerald-50 active:bg-emerald-100"
-                        }`}
+                      className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all active:scale-95 ${
+                        item.danger ? "hover:bg-red-50 active:bg-red-100" : "hover:bg-emerald-50 active:bg-emerald-100"
+                      }`}
                     >
                       <div
-                        className={`p-2.5 rounded-lg ${item.danger ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-600"
-                          }`}
+                        className={`p-2.5 rounded-lg ${
+                          item.danger ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-600"
+                        }`}
                       >
                         <item.icon className="w-5 h-5" />
                       </div>
@@ -416,24 +449,23 @@ export default function VerticaliaDashboard() {
                         key={notif.id}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className={`p-4 cursor-pointer transition-colors ${notif.read ? 'bg-white hover:bg-gray-50' : 'bg-emerald-50/50 hover:bg-emerald-50'
-                          }`}
+                        className={`p-4 cursor-pointer transition-colors ${
+                          notif.read ? "bg-white hover:bg-gray-50" : "bg-emerald-50/50 hover:bg-emerald-50"
+                        }`}
                         onClick={() => markNotificationAsRead(notif.id)}
                       >
                         <div className="flex gap-3">
                           <div className="flex-shrink-0">
-                            {!notif.read && (
-                              <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2"></div>
-                            )}
+                            {!notif.read && <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2"></div>}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-2">
-                              <h4 className={`text-sm font-semibold ${notif.read ? 'text-gray-700' : 'text-gray-900'}`}>
+                              <h4 className={`text-sm font-semibold ${notif.read ? "text-gray-700" : "text-gray-900"}`}>
                                 {notif.title}
                               </h4>
                               <span className="text-xs text-gray-400 whitespace-nowrap">{notif.time}</span>
                             </div>
-                            <p className={`text-sm mt-1 ${notif.read ? 'text-gray-500' : 'text-gray-700'}`}>
+                            <p className={`text-sm mt-1 ${notif.read ? "text-gray-500" : "text-gray-700"}`}>
                               {notif.message}
                             </p>
                           </div>
@@ -490,7 +522,7 @@ export default function VerticaliaDashboard() {
                 M
               </div>
               <div>
-                <div className="text-white/90 text-sm">Hola,</div>
+                <div className="text-white/90 text-xs font-medium mb-1">Hola,</div>
                 <div className="text-white font-bold text-lg">Marcos</div>
               </div>
             </div>
@@ -542,7 +574,6 @@ export default function VerticaliaDashboard() {
               ))}
             </div>
 
-            {/* Huertas mejoradas */}
             {/* Huertas mejoradas */}
             <div>
               <div className="flex items-center justify-between mb-4">
