@@ -461,7 +461,11 @@ export default function VerticaliaDashboard() {
                 <IconMenu className="w-6 h-6 text-white" />
               </button>
 
-              <div className="text-white font-bold text-2xl tracking-wide">VERTICALIA</div>
+              <div className="flex-1 flex items-center justify-center">
+                <Link href="/" className="inline-flex items-center">
+                  <img src="/images/logo.png" alt="Verticalia Logo" className="h-18 w-auto object-contain" />
+                </Link>
+              </div>
 
               <div className="relative">
                 <button
