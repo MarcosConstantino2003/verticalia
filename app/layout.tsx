@@ -9,6 +9,7 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "Verticalia",
   description: "Track your plant's growth over time.",
+    generator: 'v0.app'
 }
 
 export default function RootLayout({
