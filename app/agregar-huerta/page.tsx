@@ -140,11 +140,6 @@ export default function AgregarHuertaPage() {
                           color: "ring-green-400",
                         },
                         {
-                          name: "Zanahoria",
-                          image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200&h=200&fit=crop",
-                          color: "ring-orange-400",
-                        },
-                        {
                           name: "Cebolla",
                           image: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=200&h=200&fit=crop",
                           color: "ring-purple-400",
@@ -163,16 +158,6 @@ export default function AgregarHuertaPage() {
                           name: "Espinaca",
                           image: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=200&h=200&fit=crop",
                           color: "ring-emerald-400",
-                        },
-                        {
-                          name: "Rábano",
-                          image: "https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=200&h=200&fit=crop",
-                          color: "ring-rose-400",
-                        },
-                        {
-                          name: "Pepino",
-                          image: "https://images.unsplash.com/photo-1604977042946-2b24be784d5d?w=200&h=200&fit=crop",
-                          color: "ring-green-400",
                         },
                         {
                           name: "Calabacín",
