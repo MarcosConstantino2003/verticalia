@@ -1,14 +1,7 @@
 "use client"
 
-import type React from "react"
-
 import { motion } from "framer-motion"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import * as safeStorage from "@/lib/safe-storage"
 
 const IconArrowLeft = ({ className = "w-5 h-5" }) => (
@@ -29,8 +22,13 @@ const IconLeaf = ({ className = "w-6 h-6" }) => (
   </svg>
 )
 
+const IconCheck = ({ className = "w-5 h-5" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
 export default function AgregarHuertaPage() {
-  const router = useRouter()
   const [formData, setFormData] = useState({
     name: "",
     plant: "",
@@ -40,24 +38,23 @@ export default function AgregarHuertaPage() {
   })
 
   const plantOptions = [
-    { name: "Papa", image: "/potato-plant-vegetable.jpg" },
-    { name: "Lechuga", image: "/lettuce-green-leafy-vegetable.jpg" },
-    { name: "Zanahoria", image: "/carrot-orange-vegetable.jpg" },
-    { name: "Cebolla", image: "/onion-bulb-vegetable.jpg" },
-    { name: "Tomate", image: "/tomato-red-vegetable.jpg" },
-    { name: "Pimiento", image: "/bell-pepper-vegetable.jpg" },
-    { name: "Espinaca", image: "/spinach-green-leafy-vegetable.jpg" },
-    { name: "Rábano", image: "/radish-red-vegetable.jpg" },
-    { name: "Pepino", image: "/cucumber-green-vegetable.jpg" },
-    { name: "Calabacín", image: "/zucchini-green-vegetable.jpg" },
-    { name: "Berenjena", image: "/eggplant-purple-vegetable.jpg" },
-    { name: "Brócoli", image: "/broccoli-green-vegetable.jpg" },
-    { name: "Coliflor", image: "/cauliflower-white-vegetable.jpg" },
-    { name: "Repollo", image: "/cabbage-green-vegetable.jpg" },
-    { name: "Acelga", image: "/chard-leafy-green-vegetable.jpg" },
+    { name: "Papa", image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200&h=200&fit=crop", color: "ring-amber-400" },
+    { name: "Lechuga", image: "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=200&h=200&fit=crop", color: "ring-green-400" },
+    { name: "Zanahoria", image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=200&h=200&fit=crop", color: "ring-orange-400" },
+    { name: "Cebolla", image: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=200&h=200&fit=crop", color: "ring-purple-400" },
+    { name: "Tomate", image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200&h=200&fit=crop", color: "ring-red-400" },
+    { name: "Pimiento", image: "https://images.unsplash.com/photo-1525607551316-4a8e16d1f9ba?w=200&h=200&fit=crop", color: "ring-lime-400" },
+    { name: "Espinaca", image: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=200&h=200&fit=crop", color: "ring-emerald-400" },
+    { name: "Rábano", image: "https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=200&h=200&fit=crop", color: "ring-rose-400" },
+    { name: "Pepino", image: "https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=200&h=200&fit=crop", color: "ring-green-400" },
+    { name: "Calabacín", image: "https://images.unsplash.com/photo-1579113800032-c38bd7635818?w=200&h=200&fit=crop", color: "ring-lime-400" },
+    { name: "Brócoli", image: "https://images.unsplash.com/photo-1628773822503-930a7eaecf80?w=200&h=200&fit=crop", color: "ring-green-400" },
+    { name: "Coliflor", image: "https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?w=200&h=200&fit=crop", color: "ring-gray-400" },
+    { name: "Repollo", image: "https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=200&h=200&fit=crop", color: "ring-green-400" },
+    { name: "Acelga", image: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=200&h=200&fit=crop", color: "ring-teal-400" },
   ]
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
 
     if (!formData.name || !formData.plant) {
@@ -65,192 +62,225 @@ export default function AgregarHuertaPage() {
       return
     }
 
-    const stored = safeStorage.getItem("verticalia-huertas")
-    const huertas = stored ? JSON.parse(stored) : []
+    try {
+      const stored = safeStorage.getItem("verticalia-huertas")
+      const huertas = stored ? JSON.parse(stored) : []
 
-    const newHuerta = {
-      id: huertas.length > 0 ? Math.max(...huertas.map((h: any) => h.id)) + 1 : 1,
-      name: formData.name,
-      plant: formData.plant,
-      location: formData.location,
-      plantingDate: formData.plantingDate,
-      notes: formData.notes,
-      nextWater: "5 días",
+      const newHuerta = {
+        id: huertas.length > 0 ? Math.max(...huertas.map((h) => h.id)) + 1 : 1,
+        name: formData.name,
+        plant: formData.plant,
+        location: formData.location,
+        plantingDate: formData.plantingDate,
+        notes: formData.notes,
+        nextWater: "5 días",
+        status: "good",
+      }
+
+      const updated = [...huertas, newHuerta]
+      safeStorage.setItem("verticalia-huertas", JSON.stringify(updated))
+
+      console.log("Nueva huerta guardada:", newHuerta)
+      // redirigir al inicio
+      window.location.href = "/"
+    } catch (err) {
+      console.error("Error al guardar huerta:", err)
+      alert("Ocurrió un error guardando la huerta. Revisá la consola.")
     }
+  }
 
-    safeStorage.setItem("verticalia-huertas", JSON.stringify([...huertas, newHuerta]))
-
-    router.push("/")
+  const handleBack = () => {
+    window.location.href = "/"
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-emerald-50 relative overflow-hidden">
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none blur-sm opacity-80"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="none"
-        viewBox="0 0 800 1200"
-        aria-hidden
-      >
-        <defs>
-          <linearGradient id="g1" x1="0" x2="1">
-            <stop offset="0%" stopColor="#ECFDF5" />
-            <stop offset="100%" stopColor="#DBFADF" />
-          </linearGradient>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#g1)" />
-        <g transform="translate(-80, -40)" opacity="0.25">
-          <polygon points="100,50 220,250 -20,250" fill="#10B981" />
-          <polygon points="300,200 420,400 180,400" fill="#34D399" />
-          <polygon points="520,60 680,260 420,260" fill="#059669" />
-          <polygon points="640,420 760,620 520,620" fill="#16A34A" />
-          <polygon points="200,540 340,760 80,760" fill="#86EFAC" />
-        </g>
-      </svg>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-20 -right-20 w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-teal-300/15 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-emerald-300/10 rounded-full blur-2xl"></div>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-xs bg-white rounded-2xl shadow-xl p-6 relative z-10"
-      >
-        <div className="flex items-center gap-3 mb-6">
-          <button
-            onClick={() => router.push("/")}
-            className="p-2 hover:bg-emerald-50 rounded-lg transition-colors"
-            aria-label="Volver"
-          >
-            <IconArrowLeft className="text-emerald-700" />
-          </button>
-          <div className="flex items-center gap-2 flex-1">
-            <IconLeaf className="text-emerald-600" />
-            <h1 className="text-lg font-bold text-emerald-800">Nueva Huerta</h1>
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Header compacto */}
+        <div className="bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500 px-5 py-4 shadow-lg">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleBack}
+              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all active:scale-95 backdrop-blur-sm"
+              aria-label="Volver"
+              type="button"
+            >
+              <IconArrowLeft className="text-white" />
+            </button>
+            <div className="flex items-center gap-2 flex-1">
+              <IconLeaf className="text-white w-5 h-5" />
+              <h1 className="text-lg font-bold text-white">Nueva Huerta</h1>
+            </div>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-3 -mx-6 px-6 pb-4 border-b border-emerald-100">
-            <Label className="text-sm font-medium text-gray-700">
-              Tipo de planta <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative -mx-6">
-              <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+        {/* Contenido con scroll */}
+        <div className="flex-1 overflow-y-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-5 pb-24"
+          >
+            <div className="space-y-6">
+              {/* Selector de plantas mejorado */}
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                  Tipo de planta
+                  <span className="text-red-500">*</span>
+                </label>
 
-              <div className="overflow-x-auto scrollbar-hide px-6 pb-2">
-                <div className="flex gap-3 min-w-max">
-                  {plantOptions.map((plant) => (
-                    <motion.button
-                      key={plant.name}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, plant: plant.name })}
-                      className={`flex flex-col items-center gap-2 p-3 rounded-xl transition-all ${
-                        formData.plant === plant.name
-                          ? "bg-emerald-50 ring-2 ring-emerald-500 shadow-md"
-                          : "bg-gray-50 hover:bg-emerald-50/50"
-                      }`}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <div
-                        className={`w-20 h-20 rounded-full overflow-hidden border-2 transition-all ${
-                          formData.plant === plant.name ? "border-emerald-500 shadow-lg" : "border-gray-200"
-                        }`}
-                      >
-                        <img
-                          src={plant.image || "/placeholder.svg"}
-                          alt={plant.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <span
-                        className={`text-xs font-medium transition-colors ${
-                          formData.plant === plant.name ? "text-emerald-700" : "text-gray-600"
-                        }`}
-                      >
-                        {plant.name}
-                      </span>
-                      {formData.plant === plant.name && (
-                        <motion.div
-                          layoutId="selected-indicator"
-                          className="w-1.5 h-1.5 rounded-full bg-emerald-500"
-                          initial={false}
-                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                        />
-                      )}
-                    </motion.button>
-                  ))}
+                <div className="relative -mx-5">
+                  <div className="overflow-x-auto px-5 pb-3">
+                    <div className="flex gap-4 min-w-max py-2">
+                      {plantOptions.map((plant) => (
+                        <motion.button
+                          key={plant.name}
+                          type="button" // <- importante: que no haga submit
+                          onClick={() => setFormData({ ...formData, plant: plant.name })}
+                          className={`relative flex flex-col items-center gap-3 transition-all ${
+                            formData.plant === plant.name ? "scale-105" : "scale-100 hover:scale-102"
+                          }`}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <div className="relative">
+                            <div
+                              className={`w-24 h-24 rounded-2xl overflow-hidden shadow-md transition-all ${
+                                formData.plant === plant.name 
+                                  ? `ring-4 ${plant.color} shadow-lg` 
+                                  : "ring-2 ring-gray-200 hover:ring-gray-300"
+                              }`}
+                            >
+                              <img
+                                src={plant.image}
+                                alt={plant.name}
+                                className="w-full h-full object-cover"
+                              />
+                              <div className={`absolute inset-0 transition-opacity ${
+                                formData.plant === plant.name 
+                                  ? "bg-emerald-500/10" 
+                                  : "bg-black/5 hover:bg-black/0"
+                              }`} />
+                            </div>
+                            {formData.plant === plant.name && (
+                              <motion.div
+                                layoutId="selected-indicator"
+                                className="absolute -top-2 -right-2 w-7 h-7 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white"
+                                initial={false}
+                                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                              >
+                                <IconCheck className="w-4 h-4 text-white" />
+                              </motion.div>
+                            )}
+                          </div>
+                          <span
+                            className={`text-sm font-semibold transition-colors ${
+                              formData.plant === plant.name ? "text-emerald-700" : "text-gray-700"
+                            }`}
+                          >
+                            {plant.name}
+                          </span>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Indicadores de scroll */}
+                  <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-1 pb-1">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="w-1.5 h-1.5 rounded-full bg-gray-300"></div>
+                    ))}
+                  </div>
                 </div>
               </div>
+
+              {/* FORM: aquí se maneja onSubmit */}
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-2">
+                  <label htmlFor="name" className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                    Nombre de la huerta
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="Ej: Huerta F"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all text-gray-800 placeholder:text-gray-400"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="location" className="text-sm font-semibold text-gray-700">
+                    Ubicación/Sección
+                  </label>
+                  <input
+                    id="location"
+                    type="text"
+                    placeholder="Ej: Sección A, Nivel 2"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all text-gray-800 placeholder:text-gray-400"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="plantingDate" className="text-sm font-semibold text-gray-700">
+                    Fecha de plantación
+                  </label>
+                  <input
+                    id="plantingDate"
+                    type="date"
+                    value={formData.plantingDate}
+                    onChange={(e) => setFormData({ ...formData, plantingDate: e.target.value })}
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all text-gray-800"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="notes" className="text-sm font-semibold text-gray-700">
+                    Notas adicionales
+                  </label>
+                  <textarea
+                    id="notes"
+                    placeholder="Observaciones, cuidados especiales, etc."
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all text-gray-800 placeholder:text-gray-400 min-h-[120px] resize-none"
+                  />
+                </div>
+
+                {/* Botones fijos en la parte inferior dentro del form */}
+                <div className="sticky bottom-0 bg-white border-t border-gray-200 p-5 shadow-lg">
+                  <div className="flex flex-col gap-3">
+                    <button
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
+                    >
+                      Crear Huerta
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleBack}
+                      className="w-full bg-white border-2 border-gray-200 text-gray-700 font-semibold py-3.5 px-6 rounded-xl hover:bg-gray-50 transition-all active:scale-[0.98]"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Nombre de la huerta <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="name"
-              placeholder="Ej: Huerta F"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="location" className="text-sm font-medium text-gray-700">
-              Ubicación/Sección
-            </Label>
-            <Input
-              id="location"
-              placeholder="Ej: Sección A, Nivel 2"
-              value={formData.location}
-              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              className="border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="plantingDate" className="text-sm font-medium text-gray-700">
-              Fecha de plantación
-            </Label>
-            <Input
-              id="plantingDate"
-              type="date"
-              value={formData.plantingDate}
-              onChange={(e) => setFormData({ ...formData, plantingDate: e.target.value })}
-              className="border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="notes" className="text-sm font-medium text-gray-700">
-              Notas adicionales
-            </Label>
-            <Textarea
-              id="notes"
-              placeholder="Observaciones, cuidados especiales, etc."
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500 min-h-[100px] resize-none"
-            />
-          </div>
-
-          <div className="flex flex-col gap-3 pt-4">
-            <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white h-11 text-base">
-              Crear Huerta
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.push("/")}
-              className="w-full border-emerald-200 text-emerald-700 hover:bg-emerald-50 h-11 text-base"
-            >
-              Cancelar
-            </Button>
-          </div>
-        </form>
-      </motion.div>
+          </motion.div>
+        </div>
+      </div>
     </div>
   )
 }
