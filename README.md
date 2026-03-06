@@ -9,6 +9,16 @@
 
 🏆 **Proyecto Ganador (1er Puesto) - Sede UNS | Rally Latinoamericano de Innovación 2025**
 
+<div align="center">
+  <img src="public/images/logo.png" alt="Logo" width="300"/>
+  
+  <h3>An AI-powered Math, Physics, and Statistics Solver<br/><i>Un solucionador impulsado por IA para Matemáticas, Física y Estadística</i></h3>
+
+  <p>
+    <a href="#español">Español</a> •
+    <a href="#english">English</a>
+  </p>
+</div>
 ---
 
 ## 🚀 Características Principales
