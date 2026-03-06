@@ -1,30 +1,53 @@
-# Verticalia dashboard UI
+# 🌿 Verticalia - Sistema IoT de Riego Sustentable
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+[![Deploy](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://verticalia.vercel.app/)
+[![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)](#)
+[![IoT](https://img.shields.io/badge/Hardware-ESP32-red?logo=espressif)](#)
+[![Rally](https://img.shields.io/badge/Rally_Latinoamericano-1er_Puesto_UNS-gold)](#)
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/marcosconstantino2003s-projects/v0-verticalia-dashboard-ui)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/5lq2IjDHwOp)
+**Verticalia** es una huerta vertical automatizada y modular orientada a la economía circular. El sistema recicla aguas grises domésticas (como el agua de cocción) mediante un sistema de filtrado físico y biológico, y gestiona el riego de forma inteligente mediante un microcontrolador ESP32 y una aplicación web.
 
-## Overview
+🏆 **Proyecto Ganador (1er Puesto) - Sede UNS | Rally Latinoamericano de Innovación 2025**
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+---
 
-## Deployment
+## 🚀 Características Principales
 
-Your project is live at:
+* **Aplicación de Monitoreo:** Permite visualizar métricas del tanque y de cada módulo de la huerta de manera individual, registrar riegos manuales y acceder a guías de cuidado por tipo de plantación.
+* **Edge Computing (Offline-First):** El microcontrolador ESP32 almacena localmente las instrucciones de riego. El sistema sigue funcionando y calculando tiempos de apertura de válvulas incluso si la conexión WiFi o la app no están disponibles.
+* **Reciclaje de Aguas Grises:** El tanque superior cuenta con un sistema de filtrado en tres etapas (colador/rejilla, sedimentador y filtro biológico) para tratar el agua antes de su uso.
+* **Diseño Modular Inteligente:** Mueble en forma de "C" que facilita el ingreso manual del agua en la parte superior y la extracción sencilla de piezas para mantenimiento (especialmente el filtro biológico).
+* **Riego Automatizado:** Apertura calculada de servomotores basada en lógica de fechas, tipo de cultivo y señales de sensores.
 
-**[https://vercel.com/marcosconstantino2003s-projects/v0-verticalia-dashboard-ui](https://vercel.com/marcosconstantino2003s-projects/v0-verticalia-dashboard-ui)**
+## 🛠️ Stack Tecnológico
 
-## Build your app
+**Software (Aplicación Móvil / Web)**
+* **Frontend:** React, TypeScript, CSS (Responsive Design).
+* **Hosting:** Vercel (PWA ready).
+* **Lógica:** Algoritmos de cálculo de riego e interfaz de control.
 
-Continue building your app on:
+**Hardware (IoT & Infraestructura)**
+* **Microcontrolador:** ESP32 (Procesamiento centralizado y conectividad).
+* **Sensores:** Humedad de suelo (por módulo) y nivel de agua (tanque principal).
+* **Actuadores:** Servomotores para apertura/cierre de válvulas.
+* **Estructura:** Tuberías de PVC para la línea de riego, cableado electrónico estándar y mueble modular en C.
 
-**[https://v0.app/chat/projects/5lq2IjDHwOp](https://v0.app/chat/projects/5lq2IjDHwOp)**
+## ⚙️ Arquitectura del Sistema
 
-## How It Works
+1. **Ingreso de Agua:** El usuario introduce aguas grises manualmente en la primera sección del tanque superior.
+2. **Filtrado:** El agua pasa por la rejilla, el sedimentador (donde quedan los residuos físicos) y el filtro biológico.
+3. **Almacenamiento:** El agua tratada pasa a la segunda sección del tanque, donde sensores de nivel reportan el estado a la app.
+4. **Distribución:** El ESP32 lee los sensores de humedad de cada módulo. Cuando es necesario, envía una señal para abrir los servos durante un tiempo lógicamente calculado, distribuyendo el agua por los tubos de PVC.
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+## 🧑‍💻 Equipo de Desarrollo
+
+Este proyecto fue desarrollado en un plazo de 28 horas durante el Rally Latinoamericano de Innovación 2025 por un equipo multidisciplinario, y si bien el proyecto engloba nueve personas, el equipo de software que llevó a cabo esta aplicación complementaria está compuesto por:
+
+* **Marcos Constantino:** Desarrollo Frontend y DevOps.
+* **Franco Feullies:** Desarrollo Frontend y DevOps
+* **Tobías Aonso:** Integración de Lógica IoT (ESP32), port a Apk.
+
+
+## 🔗 Enlaces
+
+* **Live Demo:** [verticalia.vercel.app](https://verticalia.vercel.app/)
