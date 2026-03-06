@@ -43,9 +43,9 @@
 
 Este proyecto fue desarrollado en un plazo de 28 horas durante el Rally Latinoamericano de Innovación 2025 por un equipo multidisciplinario, y si bien el proyecto engloba nueve personas, el equipo de software que llevó a cabo esta aplicación complementaria está compuesto por:
 
-* **Marcos Constantino:** Desarrollo Frontend y DevOps.
-* **Franco Feullies:** Desarrollo Frontend y DevOps
-* **Tobías Aonso:** Integración de Lógica IoT (ESP32), port a Apk.
+* **Marcos Constantino:** Desarrollo Frontend y DevOps. [Github](https://github.com/MarcosConstantino2003) &  [Linkedin](https://www.linkedin.com/in/marquitosconstantino/)
+* **Franco Feullies:** Desarrollo Frontend y DevOps. [Github](https://github.com/francofeuilles/) &  [Linkedin](https://www.linkedin.com/in/francofeuilles/)
+* **Tobías Afonso:** Integración de Lógica IoT (ESP32), port a Apk. [Github](https://github.com/TobiasAfonso1234) &  [Linkedin](https://www.linkedin.com/in/tobias-afonso-8abb94241/)
 
 
 ## 🔗 Enlaces
